@@ -1,0 +1,1 @@
+{"easy": 0, "normal": 122, "hard": 0}
