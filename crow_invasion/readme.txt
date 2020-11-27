@@ -1,3 +1,5 @@
+[PYGAME MODULE IS REQUIRED]
+
 You are a foolhardy little cat daring to oppose the endless fleet of crows, all by yourself! 
 Luckily, you have a superpower - you can shoot laser beams from your eyes - and you do not hesitate to use it.
 
