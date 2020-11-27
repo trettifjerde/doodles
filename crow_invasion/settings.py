@@ -12,7 +12,7 @@ class Settings():
 
 		self.bullet_speed = 9.0
 		self.bullets_allowed = 100
-		self.bullet_width = 3
+		self.bullet_width = 2
 		self.bullet_height = 15
 		self.bullet_first = 4
 		self.bullet_second = 15
@@ -74,8 +74,8 @@ class GameStats():
 
 	def reset_stats(self):
 		self.cat_speed = self.settings.cat_speed
-		self.cats_left = self.settings.cat_limit
-		self.crows_killed = 0
+		self.lives = self.settings.cat_limit
+		self.score = 0
 		self.level = 1
 		self.crow_speed = self.settings.crow_speed
 		self.bullet_speed = self.settings.bullet_speed

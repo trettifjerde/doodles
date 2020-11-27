@@ -8,7 +8,7 @@ import pygame
 from settings import Settings, GameStats
 from cat import Cat, Crow, Bullet
 from button import Button, Difficulty_Button
-from scoreboard import Scoreboard
+from scoreboard import Scoreboard, Score, Lives, Level, Record
 
 class CrowInvasion():
 	def __init__(self):
@@ -22,11 +22,11 @@ class CrowInvasion():
 		pygame.display.set_caption("Crow Invasion")
 
 		self.cat = Cat(self)
-		self.score = Scoreboard(self)
-		self.lives = Scoreboard(self)
-		self.record = Scoreboard(self)
-		self.record.prep_record()
-		self.level = Scoreboard(self)
+		self.score = Score(self)
+		self.lives = Lives(self)
+		self.record = Record(self)
+		self.level = Level(self)
+		self.info = [self.score, self.lives, self.record, self.level]
 		self.play_button = Button(self, "NEW GAME")
 		self.pause_button = Button(self, "GAME PAUSED")
 		self.difficulty_default = Difficulty_Button(self, "NORMAL")
@@ -110,10 +110,9 @@ class CrowInvasion():
 		pygame.mouse.set_visible(False)
 
 	def _prep_scoreboard(self):
-		self.score.prep_score()
-		self.record.prep_record()
-		self.lives.prep_lives()
-		self.level.prep_level()
+		for board in self.info:
+			board.adjust_score()
+			board.set_rect()
 
 	def _prep_new_round(self):
 		self.bullets = pygame.sprite.Group()
@@ -214,33 +213,33 @@ class CrowInvasion():
 						hitcrow = crow
 					elif hitcrow == crow:
 						continue
-					self.stats.crows_killed += 1
+					self.stats.score += 1
 					self.crows.remove(crow)
-					self.score.prep_score()
-					if self.stats.crows_killed > self.settings.record:
-						self.settings.record = self.stats.crows_killed
+					self.score.adjust_score()
+					if self.stats.score > self.settings.record:
+						self.settings.record = self.stats.score
 						with open("record.txt", "r") as f:
 							records = json.load(f)
 						records[self.settings.difficulty] = self.settings.record
 						with open("record.txt", "w") as f:
 							json.dump(records, f)
-						self.record.prep_record()
+						self.record.adjust_score()
 				elif not bullet.isgreen and crow.islife: # red light vs life
 					self.crows.remove(crow)
 				self.bullets.remove(bullet)
 
 	def _level_up(self):
 		self.stats.level += 1
-		self.level.prep_level()
+		self.level.adjust_score()
 		self.bullets.empty()
 		self.stats.increase_speed()
 		self._create_fleet()
 		self.cat.center_cat()
 
 	def _cat_gets_life(self, crow):
-		self.stats.cats_left += 1
+		self.stats.lives += 1
 		self.crows.remove(crow)
-		self.lives.prep_lives()
+		self.lives.adjust_score()
 
 	def _update_crows(self):
 		self._check_fleet_edges()
@@ -276,10 +275,10 @@ class CrowInvasion():
 					break
 
 	def _cat_hit(self):
-		self.stats.cats_left -= 1
+		self.stats.lives -= 1
 		sleep(0.5)
-		if self.stats.cats_left > 0:
-			self.lives.prep_lives()
+		if self.stats.lives > 0:
+			self.lives.adjust_score()
 			self._prep_new_round()
 		else:
 			self.stats.game_active = False
@@ -288,7 +287,8 @@ class CrowInvasion():
 	def _update_screen(self):
 		self.screen.fill(self.settings.bg_color)
 		self.cat.blitme()
-		self.record.show_score()
+		for board in self.info:
+			board.show_score()
 		if not self.stats.game_active:
 			self._draw_buttons()
 		else:
@@ -307,9 +307,6 @@ class CrowInvasion():
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 		self.crows.draw(self.screen)
-		self.score.show_score()
-		self.lives.show_score()
-		self.level.show_score()
 
 if __name__ == "__main__":
 	ci = CrowInvasion()
