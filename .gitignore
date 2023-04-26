@@ -1,3 +1,7 @@
 __pycache__/
 crow_invasion/ci_side.py
 crow_invasion/__pycache__/
+
+ocaps/processed
+
+*.txt
