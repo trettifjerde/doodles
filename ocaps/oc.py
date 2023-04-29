@@ -35,6 +35,6 @@ for filename in filenames:
 
 sorted_tags_info = sorted([[key, info[0], info[1]] for key, info in tag_dates.items()], key= lambda info: info[2])
 
-with open('squad_dates.txt', mode='w') as txt:
+with open('squads_info.txt', mode='w') as txt:
     for tag, date, timestamp in sorted_tags_info:
         txt.write(f'{tag}: {date} {timestamp}\n')
