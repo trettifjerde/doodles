@@ -1,0 +1,17 @@
+{
+  "name": "blockchain",
+  "version": "1",
+  "description": "testing blockchain",
+  "repository": "https://github.com/trettifjerde/blockchain.git",
+  "author": "trettifjerde",
+  "license": "MIT",
+  "private": false,
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@types/node": "^20.5.9",
+    "typescript": "^5.2.2"
+  }
+}
